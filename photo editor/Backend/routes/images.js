@@ -3,6 +3,8 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
+const fsPromises = require("fs").promises;
 const db = require("../config/db");
 
 // [03/25/2026] configure storage
@@ -141,18 +143,82 @@ router.get("/versions/:imageId", async (req, res) => {
   }
 
   try {
+    const [images] = await db.promise().query(
+      "SELECT * FROM Images WHERE id = ?",
+      [imageId]
+    );
+
+    if (images.length === 0) {
+      return res.status(404).json({ message: "Image not found" });
+    }
+
     const [versions] = await db.promise().query(
       "SELECT * FROM ImageVersions WHERE imageId = ? ORDER BY versionNumber ASC",
       [imageId]
     );
 
-    if (versions.length === 0) {
-      return res.status(404).json({ message: "No versions found for this image" });
-    }
-
     res.status(200).json(versions);
   } catch (err) {
     console.error("Get versions error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// [03/25/2026] delete image and all versions
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ message: "Image ID is required" });
+  }
+
+  try {
+    const [images] = await db.promise().query(
+      "SELECT * FROM Images WHERE id = ?",
+      [id]
+    );
+
+    if (images.length === 0) {
+      return res.status(404).json({ message: "Image not found" });
+    }
+
+    const [versions] = await db.promise().query(
+      "SELECT * FROM ImageVersions WHERE imageId = ?",
+      [id]
+    );
+
+    const filesToDelete = new Set();
+
+    if (images[0].originalFilePath) {
+      filesToDelete.add(images[0].originalFilePath);
+    }
+
+    for (const version of versions) {
+      if (version.filePath) {
+        filesToDelete.add(version.filePath);
+      }
+    }
+
+    await db.promise().query(
+      "DELETE FROM Images WHERE id = ?",
+      [id]
+    );
+
+    for (const fileName of filesToDelete) {
+      const fullPath = `uploads/${fileName}`;
+
+      try {
+        await fsPromises.unlink(fullPath);
+      } catch (fileErr) {
+        if (fileErr.code !== "ENOENT") {
+          console.error("File delete error:", fileErr);
+        }
+      }
+    }
+
+    res.status(200).json({ message: "Image deleted successfully" });
+  } catch (err) {
+    console.error("Delete image error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
