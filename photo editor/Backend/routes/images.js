@@ -33,17 +33,76 @@ router.post("/upload", upload.single("image"), async (req, res) => {
   try {
     const filePath = req.file.filename;
 
-    await db.promise().query(
+    const [result] = await db.promise().query(
       "INSERT INTO Images (ownerId, title, originalFilePath) VALUES (?, ?, ?)",
       [ownerId, title, filePath]
     );
 
+    // save original as version 0
+    await db.promise().query(
+      "INSERT INTO ImageVersions (imageId, filePath, versionNumber) VALUES (?, ?, ?)",
+      [result.insertId, filePath, 0]
+    );
+
     res.status(201).json({
       message: "Image uploaded",
+      imageId: result.insertId,
       file: filePath
     });
   } catch (err) {
     console.error("Upload error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// [03/25/2026] save edited image version
+router.post("/save", upload.single("image"), async (req, res) => {
+  const { imageId } = req.body || {};
+
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
+
+  if (!imageId) {
+    return res.status(400).json({ message: "Image ID is required" });
+  }
+
+  try {
+    const [images] = await db.promise().query(
+      "SELECT * FROM Images WHERE id = ?",
+      [imageId]
+    );
+
+    if (images.length === 0) {
+      return res.status(404).json({ message: "Image not found" });
+    }
+
+    const [versions] = await db.promise().query(
+      "SELECT MAX(versionNumber) AS maxVersion FROM ImageVersions WHERE imageId = ?",
+      [imageId]
+    );
+
+    const nextVersion = (versions[0].maxVersion || 0) + 1;
+    const filePath = req.file.filename;
+
+    await db.promise().query(
+      "INSERT INTO ImageVersions (imageId, filePath, versionNumber) VALUES (?, ?, ?)",
+      [imageId, filePath, nextVersion]
+    );
+
+    await db.promise().query(
+      "UPDATE Images SET lastEditedAt = CURRENT_TIMESTAMP WHERE id = ?",
+      [imageId]
+    );
+
+    res.status(201).json({
+      message: "Edited image version saved",
+      imageId: Number(imageId),
+      versionNumber: nextVersion,
+      file: filePath
+    });
+  } catch (err) {
+    console.error("Save version error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
