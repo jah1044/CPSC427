@@ -38,7 +38,7 @@ router.post("/upload", upload.single("image"), async (req, res) => {
       [ownerId, title, filePath]
     );
 
-    // save original as version 0
+    // [03/25/2026] save original as version 0
     await db.promise().query(
       "INSERT INTO ImageVersions (imageId, filePath, versionNumber) VALUES (?, ?, ?)",
       [result.insertId, filePath, 0]
@@ -128,6 +128,31 @@ router.get("/view/:id", async (req, res) => {
     res.status(200).json(images[0]);
   } catch (err) {
     console.error("Get image error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// [03/25/2026] get all versions for one image
+router.get("/versions/:imageId", async (req, res) => {
+  const { imageId } = req.params;
+
+  if (!imageId) {
+    return res.status(400).json({ message: "Image ID is required" });
+  }
+
+  try {
+    const [versions] = await db.promise().query(
+      "SELECT * FROM ImageVersions WHERE imageId = ? ORDER BY versionNumber ASC",
+      [imageId]
+    );
+
+    if (versions.length === 0) {
+      return res.status(404).json({ message: "No versions found for this image" });
+    }
+
+    res.status(200).json(versions);
+  } catch (err) {
+    console.error("Get versions error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
