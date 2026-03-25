@@ -9,6 +9,8 @@ const authRoutes = require("./routes/auth");
 
 const app = express();
 
+
+
 // [03/25/2026] middleware
 app.use(cors());
 app.use(express.json());
@@ -27,4 +29,15 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+
+// [03/25/2026] import image routes
+const imageRoutes = require("./routes/images");
+
+// [03/25/2026] image routes
+app.use("/images", imageRoutes);
+
+// [03/25/2026] serve uploaded files
+app.use("/uploads", express.static("uploads"));
+
+
 });
