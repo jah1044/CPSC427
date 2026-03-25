@@ -3,8 +3,8 @@
 Contributors:
 
 + Joey Hudak – [@jah1044](https://www.github.com/jah1044)
-+ Team Member 2 – [GitHub Username]
-+ Team Member 3 – [GitHub Username]
++ Londan Werts – [@Lwerts](https://www.github.com/lwerts)
++ Lucas Schultz – [@lds1008](https://www.github.com/lds1008)
 
 
 ## Project Overview
