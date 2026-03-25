@@ -48,6 +48,31 @@ router.post("/upload", upload.single("image"), async (req, res) => {
   }
 });
 
+// [03/25/2026] get one image by id
+router.get("/view/:id", async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ message: "Image ID is required" });
+  }
+
+  try {
+    const [images] = await db.promise().query(
+      "SELECT * FROM Images WHERE id = ?",
+      [id]
+    );
+
+    if (images.length === 0) {
+      return res.status(404).json({ message: "Image not found" });
+    }
+
+    res.status(200).json(images[0]);
+  } catch (err) {
+    console.error("Get image error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 // [03/25/2026] get all images for one user
 router.get("/:userId", async (req, res) => {
   const { userId } = req.params;
