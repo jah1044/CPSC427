@@ -6,10 +6,9 @@ const cors = require("cors");
 // [03/25/2026] import db + routes
 const db = require("./config/db");
 const authRoutes = require("./routes/auth");
+const imageRoutes = require("./routes/images");
 
 const app = express();
-
-
 
 // [03/25/2026] middleware
 app.use(cors());
@@ -24,20 +23,13 @@ app.get("/", (req, res) => {
 // [03/25/2026] auth routes
 app.use("/auth", authRoutes);
 
+// [03/25/2026] image routes + serve uploaded files
+app.use("/images", imageRoutes);
+app.use("/uploads", express.static("uploads"));
+
 // [03/25/2026] start server
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-
-// [03/25/2026] import image routes
-const imageRoutes = require("./routes/images");
-
-// [03/25/2026] image routes
-app.use("/images", imageRoutes);
-
-// [03/25/2026] serve uploaded files
-app.use("/uploads", express.static("uploads"));
-
-
 });

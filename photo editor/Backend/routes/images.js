@@ -16,14 +16,18 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 
 // [03/25/2026] upload image
 router.post("/upload", upload.single("image"), async (req, res) => {
-  const { ownerId, title } = req.body;
+  const { ownerId, title } = req.body || {};
 
   if (!req.file) {
     return res.status(400).json({ message: "No file uploaded" });
+  }
+
+  if (!ownerId || !title) {
+    return res.status(400).json({ message: "ownerId and title are required" });
   }
 
   try {
@@ -34,28 +38,33 @@ router.post("/upload", upload.single("image"), async (req, res) => {
       [ownerId, title, filePath]
     );
 
-    res.json({ message: "Image uploaded", file: filePath });
-
+    res.status(201).json({
+      message: "Image uploaded",
+      file: filePath
+    });
   } catch (err) {
-    console.error(err);
+    console.error("Upload error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-// [03/25/2026] get user images
+// [03/25/2026] get all images for one user
 router.get("/:userId", async (req, res) => {
   const { userId } = req.params;
 
+  if (!userId) {
+    return res.status(400).json({ message: "User ID is required" });
+  }
+
   try {
     const [images] = await db.promise().query(
-      "SELECT * FROM Images WHERE ownerId = ?",
+      "SELECT * FROM Images WHERE ownerId = ? ORDER BY uploadedAt DESC",
       [userId]
     );
 
-    res.json(images);
-
+    res.status(200).json(images);
   } catch (err) {
-    console.error(err);
+    console.error("Get images error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
