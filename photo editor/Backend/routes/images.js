@@ -164,6 +164,54 @@ router.get("/versions/:imageId", async (req, res) => {
   }
 });
 
+// [03/26/2026] delete one image version
+router.delete("/version/:id", async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ message: "Version ID is required" });
+  }
+
+  try {
+    const [versions] = await db.promise().query(
+      "SELECT * FROM ImageVersions WHERE id = ?",
+      [id]
+    );
+
+    if (versions.length === 0) {
+      return res.status(404).json({ message: "Version not found" });
+    }
+
+    const version = versions[0];
+
+    if (version.versionNumber === 0) {
+      return res.status(400).json({ message: "Original version cannot be deleted here" });
+    }
+
+    await db.promise().query(
+      "DELETE FROM ImageVersions WHERE id = ?",
+      [id]
+    );
+
+    if (version.filePath) {
+      const fullPath = `uploads/${version.filePath}`;
+
+      try {
+        await fsPromises.unlink(fullPath);
+      } catch (fileErr) {
+        if (fileErr.code !== "ENOENT") {
+          console.error("File delete error:", fileErr);
+        }
+      }
+    }
+
+    res.status(200).json({ message: "Image version deleted successfully" });
+  } catch (err) {
+    console.error("Delete version error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 // [03/25/2026] delete image and all versions
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
