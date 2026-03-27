@@ -3,7 +3,6 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
-const fs = require("fs");
 const fsPromises = require("fs").promises;
 const db = require("../config/db");
 const auth = require("../middleware/auth");
@@ -22,15 +21,16 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // [03/25/2026] upload image
-router.post("/upload", upload.single("image"), async (req, res) => {
-  const { ownerId, title } = req.body || {};
+router.post("/upload", auth, upload.single("image"), async (req, res) => {
+  const { title } = req.body || {};
+  const ownerId = req.user.id;
 
   if (!req.file) {
     return res.status(400).json({ message: "No file uploaded" });
   }
 
-  if (!ownerId || !title) {
-    return res.status(400).json({ message: "ownerId and title are required" });
+  if (!title) {
+    return res.status(400).json({ message: "title is required" });
   }
 
   try {
@@ -59,7 +59,7 @@ router.post("/upload", upload.single("image"), async (req, res) => {
 });
 
 // [03/25/2026] save edited image version
-router.post("/save", upload.single("image"), async (req, res) => {
+router.post("/save", auth, upload.single("image"), async (req, res) => {
   const { imageId } = req.body || {};
 
   if (!req.file) {
@@ -72,8 +72,8 @@ router.post("/save", upload.single("image"), async (req, res) => {
 
   try {
     const [images] = await db.promise().query(
-      "SELECT * FROM Images WHERE id = ?",
-      [imageId]
+      "SELECT * FROM Images WHERE id = ? AND ownerId = ?",
+      [imageId, req.user.id]
     );
 
     if (images.length === 0) {
@@ -111,7 +111,7 @@ router.post("/save", upload.single("image"), async (req, res) => {
 });
 
 // [03/25/2026] get one image by id
-router.get("/view/:id", async (req, res) => {
+router.get("/view/:id", auth, async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
@@ -120,8 +120,8 @@ router.get("/view/:id", async (req, res) => {
 
   try {
     const [images] = await db.promise().query(
-      "SELECT * FROM Images WHERE id = ?",
-      [id]
+      "SELECT * FROM Images WHERE id = ? AND ownerId = ?",
+      [id, req.user.id]
     );
 
     if (images.length === 0) {
@@ -136,7 +136,7 @@ router.get("/view/:id", async (req, res) => {
 });
 
 // [03/25/2026] get all versions for one image
-router.get("/versions/:imageId", async (req, res) => {
+router.get("/versions/:imageId", auth, async (req, res) => {
   const { imageId } = req.params;
 
   if (!imageId) {
@@ -145,8 +145,8 @@ router.get("/versions/:imageId", async (req, res) => {
 
   try {
     const [images] = await db.promise().query(
-      "SELECT * FROM Images WHERE id = ?",
-      [imageId]
+      "SELECT * FROM Images WHERE id = ? AND ownerId = ?",
+      [imageId, req.user.id]
     );
 
     if (images.length === 0) {
@@ -166,7 +166,7 @@ router.get("/versions/:imageId", async (req, res) => {
 });
 
 // [03/26/2026] delete one image version
-router.delete("/version/:id", async (req, res) => {
+router.delete("/version/:id", auth, async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
@@ -175,8 +175,11 @@ router.delete("/version/:id", async (req, res) => {
 
   try {
     const [versions] = await db.promise().query(
-      "SELECT * FROM ImageVersions WHERE id = ?",
-      [id]
+      `SELECT iv.*, i.ownerId
+       FROM ImageVersions iv
+       JOIN Images i ON iv.imageId = i.id
+       WHERE iv.id = ? AND i.ownerId = ?`,
+      [id, req.user.id]
     );
 
     if (versions.length === 0) {
@@ -214,7 +217,7 @@ router.delete("/version/:id", async (req, res) => {
 });
 
 // [03/25/2026] delete image and all versions
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
@@ -223,8 +226,8 @@ router.delete("/:id", async (req, res) => {
 
   try {
     const [images] = await db.promise().query(
-      "SELECT * FROM Images WHERE id = ?",
-      [id]
+      "SELECT * FROM Images WHERE id = ? AND ownerId = ?",
+      [id, req.user.id]
     );
 
     if (images.length === 0) {
@@ -272,18 +275,12 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// [03/25/2026] get all images for one user
-router.get("/:userId", async (req, res) => {
-  const { userId } = req.params;
-
-  if (!userId) {
-    return res.status(400).json({ message: "User ID is required" });
-  }
-
+// [03/25/2026] get all images for logged in user
+router.get("/", auth, async (req, res) => {
   try {
     const [images] = await db.promise().query(
       "SELECT * FROM Images WHERE ownerId = ? ORDER BY uploadedAt DESC",
-      [userId]
+      [req.user.id]
     );
 
     res.status(200).json(images);
