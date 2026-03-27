@@ -6,6 +6,7 @@ const path = require("path");
 const fs = require("fs");
 const fsPromises = require("fs").promises;
 const db = require("../config/db");
+const auth = require("../middleware/auth");
 
 // [03/25/2026] configure storage
 const storage = multer.diskStorage({
