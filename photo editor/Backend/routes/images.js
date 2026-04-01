@@ -165,6 +165,59 @@ router.get("/versions/:imageId", auth, async (req, res) => {
   }
 });
 
+// [04/01/2026] restore a previous image version
+router.post("/restore/:versionId", auth, async (req, res) => {
+  const { versionId } = req.params;
+
+  if (!versionId) {
+    return res.status(400).json({ message: "Version ID is required" });
+  }
+
+  try {
+    const [versions] = await db.promise().query(
+      `SELECT iv.*, i.ownerId
+       FROM ImageVersions iv
+       JOIN Images i ON iv.imageId = i.id
+       WHERE iv.id = ? AND i.ownerId = ?`,
+      [versionId, req.user.id]
+    );
+
+    if (versions.length === 0) {
+      return res.status(404).json({ message: "Version not found" });
+    }
+
+    const version = versions[0];
+
+    const [maxVersionResult] = await db.promise().query(
+      "SELECT MAX(versionNumber) AS maxVersion FROM ImageVersions WHERE imageId = ?",
+      [version.imageId]
+    );
+
+    const nextVersion = (maxVersionResult[0].maxVersion || 0) + 1;
+
+    await db.promise().query(
+      "INSERT INTO ImageVersions (imageId, filePath, versionNumber) VALUES (?, ?, ?)",
+      [version.imageId, version.filePath, nextVersion]
+    );
+
+    await db.promise().query(
+      "UPDATE Images SET lastEditedAt = CURRENT_TIMESTAMP WHERE id = ?",
+      [version.imageId]
+    );
+
+    res.status(201).json({
+      message: "Version restored successfully",
+      imageId: version.imageId,
+      restoredFromVersion: version.versionNumber,
+      newVersionNumber: nextVersion
+    });
+
+  } catch (err) {
+    console.error("Restore version error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 // [03/26/2026] delete one image version
 router.delete("/version/:id", auth, async (req, res) => {
   const { id } = req.params;
