@@ -7,6 +7,9 @@ const fsPromises = require("fs").promises;
 const db = require("../config/db");
 const auth = require("../middleware/auth");
 
+// [04/01/2026] allowed file types
+const allowedTypes = /jpeg|jpg|png|webp/;
+
 // [03/25/2026] configure storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -18,10 +21,34 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage });
+// [04/01/2026] validate uploaded file
+const fileFilter = (req, file, cb) => {
+  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = allowedTypes.test(file.mimetype);
+
+  if (extname && mimetype) {
+    return cb(null, true);
+  }
+
+  cb(new Error("Only jpg, jpeg, png, and webp files are allowed"));
+};
+
+// [04/01/2026] configure upload limits
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 }
+});
 
 // [03/25/2026] upload image
-router.post("/upload", auth, upload.single("image"), async (req, res) => {
+router.post("/upload", auth, (req, res, next) => {
+  upload.single("image")(req, res, function (err) {
+    if (err) {
+      return res.status(400).json({ message: err.message });
+    }
+    next();
+  });
+}, async (req, res) => {
   const { title } = req.body || {};
   const ownerId = req.user.id;
 
@@ -59,7 +86,14 @@ router.post("/upload", auth, upload.single("image"), async (req, res) => {
 });
 
 // [03/25/2026] save edited image version
-router.post("/save", auth, upload.single("image"), async (req, res) => {
+router.post("/save", auth, (req, res, next) => {
+  upload.single("image")(req, res, function (err) {
+    if (err) {
+      return res.status(400).json({ message: err.message });
+    }
+    next();
+  });
+}, async (req, res) => {
   const { imageId } = req.body || {};
 
   if (!req.file) {
