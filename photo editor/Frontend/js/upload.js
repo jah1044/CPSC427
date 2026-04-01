@@ -54,7 +54,6 @@ async function deleteImage(imageId) {
     }
 
     try {
-        // Requirement: DELETE /images/
         await makeRequest(`/images/${imageId}`, 'DELETE');
         alert("Image deleted successfully.");
         
