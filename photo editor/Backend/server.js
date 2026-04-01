@@ -2,6 +2,8 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 
 // [03/25/2026] import db + routes
 const db = require("./config/db");
@@ -10,10 +12,28 @@ const imageRoutes = require("./routes/images");
 
 const app = express();
 
+// [04/01/2026] general rate limiter
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  message: { message: "Too many requests, please try again later" }
+});
+
+// [04/01/2026] auth rate limiter
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { message: "Too many login attempts, please try again later" }
+});
+
+// [04/01/2026] security middleware
+app.use(helmet());
+
 // [03/25/2026] middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(generalLimiter);
 
 // [03/25/2026] test route
 app.get("/", (req, res) => {
@@ -21,7 +41,7 @@ app.get("/", (req, res) => {
 });
 
 // [03/25/2026] auth routes
-app.use("/auth", authRoutes);
+app.use("/auth", authLimiter, authRoutes);
 
 // [03/25/2026] image routes + serve uploaded files
 app.use("/images", imageRoutes);
