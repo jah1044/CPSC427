@@ -45,9 +45,8 @@ async function handleUpload() {
     }
 }
 
-/**
- Delete uploaded images
- */
+
+// Delete uploaded images
 async function deleteImage(imageId) {
     if (!confirm("Are you sure you want to delete this image and all its versions?")) {
         return;
