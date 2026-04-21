@@ -76,7 +76,7 @@ async function handleRegister(event) {
     showAuthMessage("Registration successful. Redirecting to login...", false);
 
     setTimeout(() => {
-      window.location.href = "index.html";
+      window.location.href = "login.html";
     }, 1000);
   } catch (error) {
     console.error("Register error:", error);

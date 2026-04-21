@@ -1,7 +1,7 @@
 // [04/21/2026] protect account page when user is not logged in
 document.addEventListener("DOMContentLoaded", () => {
     if (!localStorage.getItem("token")) {
-      window.location.href = "index.html";
+      window.location.href = "login.html";
       return;
     }
   
@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.removeItem("user");
   
       alert(result.message || "Account deleted.");
-      window.location.href = "index.html";
+      window.location.href = "login.html";
     } catch (error) {
       console.error("Delete account error:", error);
       alert(error.message || "Could not delete account.");
@@ -128,5 +128,5 @@ document.addEventListener("DOMContentLoaded", () => {
   function logoutUser() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    window.location.href = "index.html";
+    window.location.href = "login.html";
   }

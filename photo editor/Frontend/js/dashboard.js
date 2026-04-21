@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // [04/01/2026] prevent access when no token exists
 function protectDashboard() {
   if (!localStorage.getItem("token")) {
-    window.location.href = "index.html";
+    window.location.href = "login.html";
   }
 }
 
@@ -168,8 +168,8 @@ async function uploadFromDashboard() {
     await loadGallery();
     hideUploadPanel();
 
-    const titleInput = document.getElementById("title");
-    const fileInput = document.getElementById("image");
+    const titleInput = document.getElementById("imgTitle");
+    const fileInput = document.getElementById("imgFile");
 
     if (titleInput) titleInput.value = "";
     if (fileInput) fileInput.value = "";
