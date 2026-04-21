@@ -1,38 +1,37 @@
 const BASE_URL = "http://localhost:5000";
 
-async function makeRequest(endpoint, method = 'GET', body = null, isFormData = false) {
-    const token = localStorage.getItem('token');
+// [04/01/2026] reusable api request helper
+async function makeRequest(endpoint, method = "GET", body = null) {
+  const token = localStorage.getItem("token");
 
-    const headers = {};
-    if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-    }
+  const options = {
+    method,
+    headers: {}
+  };
 
-    if (!isFormData) {
-        headers['Content-Type'] = 'application/json';
-    }
+  if (body && !(body instanceof FormData)) {
+    options.headers["Content-Type"] = "application/json";
+    options.body = JSON.stringify(body);
+  } else if (body instanceof FormData) {
+    options.body = body;
+  }
 
-    const options = { method, headers };
+  if (token) {
+    options.headers["Authorization"] = `Bearer ${token}`;
+  }
 
-    if (body) {
-        options.body = isFormData ? body : JSON.stringify(body);
-    }
+  const response = await fetch(`${BASE_URL}${endpoint}`, options);
 
-    const response = await fetch(`${BASE_URL}${endpoint}`, options);
+  let data = {};
+  try {
+    data = await response.json();
+  } catch (err) {
+    data = {};
+  }
 
-    if (response.status === 401) {
-        window.location.href = 'index.html';
-        throw new Error("Unauthorized");
-    }
+  if (!response.ok) {
+    throw new Error(data.message || "Request failed");
+  }
 
-    if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`Error ${response.status}: ${text}`);
-    }
-
-    try {
-        return await response.json();
-    } catch {
-        return null;
-    }
+  return data;
 }

@@ -41,8 +41,7 @@ app.get("/", (req, res) => {
 });
 
 // [03/25/2026] auth routes
-app.use("/auth", authLimiter, authRoutes);
-
+app.use("/auth", authRoutes);
 // [03/25/2026] image routes + serve uploaded files
 app.use("/images", imageRoutes);
 app.use("/uploads", express.static("uploads"));

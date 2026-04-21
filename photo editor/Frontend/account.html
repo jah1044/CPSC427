@@ -101,7 +101,7 @@
         </div>
       </section>
 
-      <section class="panel">
+      <section class="panel" style="margin-bottom: 1.5rem;">
         <div class="section-heading">
           <div>
             <p class="eyebrow">Session</p>
@@ -111,6 +111,30 @@
 
         <div class="card-actions">
           <button id="logoutButton" class="button button--ghost" type="button">Log Out</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Danger Zone</p>
+            <h3>Delete Account</h3>
+          </div>
+        </div>
+
+        <p>This will permanently delete your account. This action cannot be undone.</p>
+
+        <div class="upload-form">
+          <div class="form-group">
+            <label for="deleteConfirmText">Type DELETE to confirm</label>
+            <input id="deleteConfirmText" type="text" placeholder="Type DELETE" />
+          </div>
+
+          <div class="upload-actions">
+            <button id="deleteAccountButton" class="button button--danger" type="button">
+              Delete Account
+            </button>
+          </div>
         </div>
       </section>
     </main>

@@ -19,7 +19,6 @@ function protectDashboard() {
 
 // [04/01/2026] attach event listeners once after the page loads
 function bindDashboardEvents() {
-  document.getElementById("refreshDashboardButton")?.addEventListener("click", initializeDashboard);
   document.getElementById("openUploadButton")?.addEventListener("click", showUploadPanel);
   document.getElementById("closeUploadButton")?.addEventListener("click", hideUploadPanel);
   document.getElementById("uploadButton")?.addEventListener("click", uploadFromDashboard);
@@ -28,6 +27,7 @@ function bindDashboardEvents() {
   document.getElementById("clearSelectionButton")?.addEventListener("click", clearSelection);
   document.getElementById("projectSearchInput")?.addEventListener("input", handleSearchInput);
 
+  // [04/01/2026] sidebar buttons can scroll to sections without adding more pages
   document.querySelectorAll("[data-scroll-target]").forEach((button) => {
     button.addEventListener("click", () => {
       const targetId = button.dataset.scrollTarget;
@@ -39,7 +39,7 @@ function bindDashboardEvents() {
   });
 }
 
-// ✅ FIXED: properly closed function
+// [04/01/2026] load the current user's info into the dashboard
 async function loadUserSummary() {
   const user = await makeRequest("/auth/me");
   localStorage.setItem("user", JSON.stringify(user));
@@ -58,7 +58,7 @@ async function loadUserSummary() {
   }
 }
 
-// [04/01/2026] load user + images
+// [04/01/2026] load user summary and project gallery together
 async function initializeDashboard() {
   try {
     await loadUserSummary();
@@ -69,18 +69,31 @@ async function initializeDashboard() {
   }
 }
 
-// [04/01/2026] fetch all images
+// [04/01/2026] fetch all images for the logged-in user
 async function loadGallery() {
   const images = await makeRequest("/images");
   dashboardImages = Array.isArray(images) ? images : [];
   filteredImages = [...dashboardImages];
 
+  // [04/01/2026] remove deleted selections so the toolbar stays in sync
+  const validIds = new Set(dashboardImages.map((image) => image.id));
+  [...selectedImageIds].forEach((id) => {
+    if (!validIds.has(id)) {
+      selectedImageIds.delete(id);
+    }
+  });
+
   renderProjectsGrid();
   renderStoragePulse();
-  document.getElementById("displayProjectCount").textContent = dashboardImages.length;
+  updateBulkToolbarState();
+
+  const projectCount = document.getElementById("displayProjectCount");
+  if (projectCount) {
+    projectCount.textContent = String(dashboardImages.length);
+  }
 }
 
-// SIMPLE render (clean version)
+// [04/01/2026] render project cards with checkboxes for bulk delete
 function renderProjectsGrid() {
   const grid = document.getElementById("projectsGrid");
   grid.innerHTML = "";
@@ -91,43 +104,152 @@ function renderProjectsGrid() {
   }
 
   filteredImages.forEach((img) => {
-    const card = document.createElement("div");
+    const isSelected = selectedImageIds.has(img.id);
+
+    const card = document.createElement("article");
     card.className = "project-card";
-    card.innerHTML = `<p>${img.title || "Untitled"}</p>`;
+    card.innerHTML = `
+      <div class="project-card__select">
+        <input type="checkbox" data-image-id="${img.id}" ${isSelected ? "checked" : ""} />
+      </div>
+
+      <div class="project-card__body">
+        <h4>${escapeHtml(img.title || "Untitled")}</h4>
+      </div>
+    `;
+
     grid.appendChild(card);
+  });
+
+  wireProjectSelection();
+}
+
+// [04/01/2026] attach checkbox listeners after cards are rendered
+function wireProjectSelection() {
+  document.querySelectorAll("[data-image-id]").forEach((checkbox) => {
+    checkbox.addEventListener("change", (event) => {
+      const imageId = Number(event.target.dataset.imageId);
+
+      if (event.target.checked) {
+        selectedImageIds.add(imageId);
+      } else {
+        selectedImageIds.delete(imageId);
+      }
+
+      updateBulkToolbarState();
+    });
   });
 }
 
+// [04/01/2026] update the storage pulse based on current image count
 function renderStoragePulse() {
   const total = 20;
   const used = dashboardImages.length;
-  const percent = (used / total) * 100;
+  const percent = Math.min((used / total) * 100, 100);
 
-  document.getElementById("storageBarFill").style.width = percent + "%";
+  document.getElementById("storageBarFill").style.width = `${percent}%`;
   document.getElementById("storageText").textContent = `${used} of ${total} project slots used`;
 }
 
-// helpers
+// [04/01/2026] show the upload panel
 function showUploadPanel() {
   document.getElementById("uploadPanel").hidden = false;
 }
 
+// [04/01/2026] hide the upload panel
 function hideUploadPanel() {
   document.getElementById("uploadPanel").hidden = true;
 }
 
+// [04/01/2026] upload a file, then refresh the dashboard automatically
 async function uploadFromDashboard() {
-  await handleUpload();
+  try {
+    await handleUpload();
+    await loadGallery();
+    hideUploadPanel();
+
+    const titleInput = document.getElementById("title");
+    const fileInput = document.getElementById("image");
+
+    if (titleInput) titleInput.value = "";
+    if (fileInput) fileInput.value = "";
+
+    alert("Upload successful!");
+  } catch (error) {
+    console.error("Upload failed:", error);
+    alert(error.message || "Upload failed.");
+  }
 }
 
+// [04/01/2026] filter visible images by title
 function handleSearchInput(e) {
   const term = e.target.value.toLowerCase();
-  filteredImages = dashboardImages.filter(img =>
+  filteredImages = dashboardImages.filter((img) =>
     (img.title || "").toLowerCase().includes(term)
   );
   renderProjectsGrid();
+  updateBulkToolbarState();
 }
 
-function selectAllVisibleProjects() {}
-function clearSelection() {}
-function handleBulkDelete() {}
+// [04/01/2026] select all images currently visible in the filtered grid
+function selectAllVisibleProjects() {
+  filteredImages.forEach((img) => {
+    selectedImageIds.add(img.id);
+  });
+
+  renderProjectsGrid();
+  updateBulkToolbarState();
+}
+
+// [04/01/2026] clear all current selections
+function clearSelection() {
+  selectedImageIds.clear();
+  renderProjectsGrid();
+  updateBulkToolbarState();
+}
+
+// [04/01/2026] delete all selected images using the existing backend route
+async function handleBulkDelete() {
+  if (selectedImageIds.size === 0) {
+    alert("Select at least one image to delete.");
+    return;
+  }
+
+  const confirmed = confirm(`Delete ${selectedImageIds.size} selected image(s)?`);
+  if (!confirmed) return;
+
+  try {
+    for (const imageId of selectedImageIds) {
+      await makeRequest(`/images/${imageId}`, "DELETE");
+    }
+
+    selectedImageIds.clear();
+    await loadGallery();
+    alert("Selected images deleted successfully.");
+  } catch (error) {
+    console.error("Bulk delete error:", error);
+    alert(error.message || "Could not delete selected images.");
+  }
+}
+
+// [04/01/2026] enable or disable the bulk delete button based on selections
+function updateBulkToolbarState() {
+  const deleteButton = document.getElementById("bulkDeleteButton");
+  if (!deleteButton) return;
+
+  deleteButton.disabled = selectedImageIds.size === 0;
+  deleteButton.textContent =
+    selectedImageIds.size > 0
+      ? `Delete Selected (${selectedImageIds.size})`
+      : "Delete Selected";
+}
+
+// [04/01/2026] escape text safely before rendering into HTML
+function escapeHtml(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}

@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const auth = require("../middleware/auth");
 const db = require("../config/db");
+const rateLimit = require("express-rate-limit");
 
 // [03/25/2026] register user
 router.post("/register", async (req, res) => {
@@ -269,6 +270,13 @@ router.delete("/delete-account", auth, async (req, res) => {
     console.error("Delete account error:", err);
     res.status(500).json({ message: "Server error" });
   }
+});
+
+// [04/21/2026] limit repeated login attempts ONLY
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,
+  message: { message: "Too many login attempts, please try again later" }
 });
 
 module.exports = router;

@@ -1,14 +1,10 @@
-// [04/01/2026] shared helpers for login and registration pages
+// [04/01/2026] wait until page loads
 document.addEventListener("DOMContentLoaded", () => {
-  const token = localStorage.getItem("token");
-  const currentPage = window.location.pathname.split("/").pop();
+  bindAuthForms();
+});
 
-  // [04/01/2026] keep logged-in users from seeing auth pages again
-  if (token && (currentPage === "index.html" || currentPage === "" || currentPage === "register.html")) {
-    window.location.href = "dashboard.html";
-    return;
-  }
-
+// [04/01/2026] attach form events safely
+function bindAuthForms() {
   const loginForm = document.getElementById("loginForm");
   const registerForm = document.getElementById("registerForm");
 
@@ -19,60 +15,80 @@ document.addEventListener("DOMContentLoaded", () => {
   if (registerForm) {
     registerForm.addEventListener("submit", handleRegister);
   }
-});
-
-// [04/01/2026] show auth messages in a consistent place
-function setAuthMessage(message, isError = false) {
-  const messageElement = document.getElementById("authMessage");
-  if (!messageElement) return;
-
-  messageElement.textContent = message;
-  messageElement.classList.toggle("auth-message--error", isError);
-  messageElement.classList.toggle("auth-message--success", !isError && !!message);
 }
 
-// [04/01/2026] login handler
+// [04/01/2026] handle login form submit
 async function handleLogin(event) {
   event.preventDefault();
 
-  const email = document.getElementById("loginEmail").value.trim();
-  const password = document.getElementById("loginPassword").value;
+  const email = document.getElementById("loginEmail")?.value.trim();
+  const password = document.getElementById("loginPassword")?.value;
+  const messageEl = document.getElementById("authMessage");
 
-  setAuthMessage("");
+  if (!email || !password) {
+    showAuthMessage("Email and password are required.", true);
+    return;
+  }
 
   try {
-    const data = await makeRequest("/auth/login", "POST", { email, password });
+    const data = await makeRequest("/auth/login", "POST", {
+      email,
+      password
+    });
 
-    // [04/01/2026] save token and user summary for the dashboard
     localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
 
-    setAuthMessage("Login successful. Redirecting...");
-    window.location.href = "dashboard.html";
+    if (data.user) {
+      localStorage.setItem("user", JSON.stringify(data.user));
+    }
+
+    showAuthMessage("Login successful.", false);
+
+    setTimeout(() => {
+      window.location.href = "dashboard.html";
+    }, 500);
   } catch (error) {
-    setAuthMessage("Login failed. Please check your email and password.", true);
     console.error("Login error:", error);
+    showAuthMessage(error.message || "Login failed.", true);
   }
 }
 
-// [04/01/2026] registration handler
+// [04/01/2026] handle register form submit
 async function handleRegister(event) {
   event.preventDefault();
 
-  const username = document.getElementById("registerUsername").value.trim();
-  const email = document.getElementById("registerEmail").value.trim();
-  const password = document.getElementById("registerPassword").value;
+  const username = document.getElementById("registerUsername")?.value.trim();
+  const email = document.getElementById("registerEmail")?.value.trim();
+  const password = document.getElementById("registerPassword")?.value;
 
-  setAuthMessage("");
+  if (!username || !email || !password) {
+    showAuthMessage("All fields are required.", true);
+    return;
+  }
 
   try {
-    await makeRequest("/auth/register", "POST", { username, email, password });
-    setAuthMessage("Registration successful. You can now log in.");
+    await makeRequest("/auth/register", "POST", {
+      username,
+      email,
+      password
+    });
+
+    showAuthMessage("Registration successful. Redirecting to login...", false);
+
     setTimeout(() => {
       window.location.href = "index.html";
-    }, 1200);
+    }, 1000);
   } catch (error) {
-    setAuthMessage("Registration failed. Please try different account details.", true);
     console.error("Register error:", error);
+    showAuthMessage(error.message || "Registration failed.", true);
   }
+}
+
+// [04/01/2026] show auth messages on login/register pages
+function showAuthMessage(message, isError = false) {
+  const messageEl = document.getElementById("authMessage");
+  if (!messageEl) return;
+
+  messageEl.textContent = message;
+  messageEl.className = isError ? "auth-message auth-message--error" : "auth-message";
 }

@@ -633,4 +633,28 @@ input {
   .search-input {
     min-width: 100%;
   }
+
+  /* fix header nav links so they match dashboard buttons */
+.sidebar__nav a {
+  text-decoration: none;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+/* hover state */
+.sidebar__nav a:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* active page */
+.sidebar__nav a.is-active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  font-weight: 600;
+}
 }

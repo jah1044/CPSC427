@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("saveProfileButton")?.addEventListener("click", updateProfile);
     document.getElementById("changePasswordButton")?.addEventListener("click", changePassword);
     document.getElementById("logoutButton")?.addEventListener("click", logoutUser);
+    document.getElementById("deleteAccountButton")?.addEventListener("click", deleteAccount);
   }
   
   // [04/21/2026] load current user info into the form and header
@@ -94,6 +95,32 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Change password error:", error);
       alert(error.message || "Could not change password.");
+    }
+  }
+  
+  // [04/21/2026] permanently delete the current account
+  async function deleteAccount() {
+    const confirmText = document.getElementById("deleteConfirmText")?.value.trim();
+  
+    if (confirmText !== "DELETE") {
+      alert('Type DELETE exactly to confirm account deletion.');
+      return;
+    }
+  
+    const confirmed = confirm("Are you sure you want to permanently delete your account?");
+    if (!confirmed) return;
+  
+    try {
+      const result = await makeRequest("/auth/delete-account", "DELETE");
+  
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+  
+      alert(result.message || "Account deleted.");
+      window.location.href = "index.html";
+    } catch (error) {
+      console.error("Delete account error:", error);
+      alert(error.message || "Could not delete account.");
     }
   }
   
