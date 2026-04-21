@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/editor.css" />
+    <title>Image Editor</title>
+    <script src="js/api.js" defer></script>
+    <script src="js/filters.js" defer></script>
+    <script src="js/editor.js" defer></script>
+</head>
+
+<body>
+
+<div class="header-bar">
+    <button onclick="location.href='dashboard.html'"><- Back</button>
+    <h3>Image Editor</h3>
+    <button onclick="saveCurrentVersion()">Save New Version</button>
+</div>
+
+<div class="tools">
+    <h3>Adjustments</h3>
+
+    <label>Scale</label>
+    <input type="range" id="scale" min="10" max="200" value="100">
+
+    <label>Brightness</label>
+    <input type="range" id="br" min="0" max="200" value="100">
+
+    <h3>Filters</h3>
+    <button onclick="applySepia()">Sepia</button>
+    <button onclick="applyBlur()">Blur</button>
+    <button onclick="applyEdgeDetection()">Edge</button>
+
+    <h3>Export</h3>
+    <button onclick="downloadImage('png')">PNG</button>
+</div>
+
+<main>
+    <canvas id="editorCanvas"></canvas>
+</main>
+
+<aside>
+    <h4>Versions</h4>
+    <div id="versionList"></div>
+</aside>
+
+</body>
+</html>
