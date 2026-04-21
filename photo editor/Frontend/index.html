@@ -3,36 +3,111 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Photo Editor - Login</title>
+  <title>Photo Editor</title>
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/index.css" />
-  <script src="js/api.js" defer></script>
-  <script src="js/auth.js" defer></script>
 </head>
-<body class="auth-page">
-  <main class="auth-shell">
-    <section class="auth-card">
-      <div class="auth-card__header">
-        <h1>Welcome Back</h1>
-        <p>Log in to manage projects, upload images, and continue editing.</p>
+<body class="landing-page">
+  <header class="landing-header">
+    <div class="landing-header__brand">
+      <div class="landing-header__logo">PE</div>
+      <div>
+        <h1>Photo Editor</h1>
+        <p>Creative workspace</p>
+      </div>
+    </div>
+
+    <nav class="landing-header__nav">
+      <a href="login.html" class="landing-link">Login</a>
+      <a href="register.html" class="button button--primary">Get Started</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero__content">
+        <p class="eyebrow">Modern browser editing</p>
+        <h2>Edit, save, and manage your photos in one place.</h2>
+        <p class="hero__text">
+          Upload images, make edits in your browser, save versions of your work,
+          and manage everything from a clean dashboard built for creative projects.
+        </p>
+
+        <div class="hero__actions">
+          <a href="register.html" class="button button--primary">Start Editing</a>
+          <a href="login.html" class="button button--ghost">Login</a>
+        </div>
       </div>
 
-      <form id="loginForm" class="auth-form">
-        <label for="loginEmail">Email</label>
-        <input id="loginEmail" name="email" type="email" placeholder="you@example.com" required />
+      <div class="hero__card">
+        <div class="hero__preview">
+          <div class="hero__preview-top">
+            <span class="hero__badge">Version History</span>
+            <span class="hero__badge hero__badge--muted">Secure Login</span>
+          </div>
 
-        <label for="loginPassword">Password</label>
-        <input id="loginPassword" name="password" type="password" placeholder="Enter your password" required />
+          <div class="hero__image"></div>
 
-        <button type="submit" class="button button--primary">Log In</button>
-      </form>
+          <div class="hero__preview-bottom">
+            <div>
+              <p class="hero__label">Project</p>
+              <h3>Portrait Retouch</h3>
+            </div>
+            <div class="hero__stats">
+              <span>3 Versions</span>
+              <span>In Progress</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-      <p class="auth-link-row">
-        Need an account?
-        <a href="register.html">Create one here</a>
-      </p>
+    <section class="features">
+      <div class="section-heading landing-section-heading">
+        <div>
+          <p class="eyebrow">Features</p>
+          <h3>Built for your workflow</h3>
+        </div>
+      </div>
 
-      <p id="authMessage" class="auth-message" aria-live="polite"></p>
+      <div class="features-grid">
+        <article class="feature-card">
+          <div class="feature-card__icon">↑</div>
+          <h4>Image Uploads</h4>
+          <p>Upload and manage image files directly from your dashboard.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-card__icon">✦</div>
+          <h4>Editing Tools</h4>
+          <p>Apply browser-based edits like blur, brightness, and other image effects.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-card__icon">↺</div>
+          <h4>Version History</h4>
+          <p>Save different versions of your work so older edits are never lost.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-card__icon">🔒</div>
+          <h4>Secure Accounts</h4>
+          <p>Use protected accounts with authentication and user-specific image access.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="cta-panel">
+      <div>
+        <p class="eyebrow">Ready to begin?</p>
+        <h3>Start building your image library today.</h3>
+        <p>Create an account to upload, edit, version, and manage your projects.</p>
+      </div>
+
+      <div class="cta-panel__actions">
+        <a href="register.html" class="button button--primary">Create Account</a>
+        <a href="login.html" class="button button--ghost">Login</a>
+      </div>
     </section>
   </main>
 </body>
