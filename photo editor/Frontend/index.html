@@ -1,36 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Editor Login</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <script src="js/api.js" defer></script>
-    <script src="js/auth.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Photo Editor - Login</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="js/api.js" defer></script>
+  <script src="js/auth.js" defer></script>
 </head>
-<body>
-    <div class="auth-page">
-        <div class="auth-card">
-            <h1>Photo Editor</h1>
-            <p class="auth-subtitle">Sign in to continue to your account.</p>
+<body class="auth-page">
+  <main class="auth-shell">
+    <section class="auth-card">
+      <div class="auth-card__header">
+        <h1>Welcome Back</h1>
+        <p>Log in to manage projects, upload images, and continue editing.</p>
+      </div>
 
-            <form id="loginForm" class="auth-form">
-                <label for="loginEmail">Email</label>
-                <input type="email" id="loginEmail" name="email" placeholder="Enter your email" required>
+      <form id="loginForm" class="auth-form">
+        <label for="loginEmail">Email</label>
+        <input id="loginEmail" name="email" type="email" placeholder="you@example.com" required />
 
-                <label for="loginPassword">Password</label>
-                <input type="password" id="loginPassword" name="password" placeholder="Enter your password" required>
+        <label for="loginPassword">Password</label>
+        <input id="loginPassword" name="password" type="password" placeholder="Enter your password" required />
 
-                <button type="submit">Log In</button>
-            </form>
+        <button type="submit" class="button button--primary">Log In</button>
+      </form>
 
-            <p id="loginMessage" class="auth-message"></p>
+      <p class="auth-link-row">
+        Need an account?
+        <a href="register.html">Create one here</a>
+      </p>
 
-            <p class="auth-switch">
-                Don’t have an account?
-                <a href="register.html">Create one here</a>
-            </p>
-        </div>
-    </div>
+      <p id="authMessage" class="auth-message" aria-live="polite"></p>
+    </section>
+  </main>
 </body>
 </html>

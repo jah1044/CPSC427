@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Photo Editor - Dashboard</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="js/api.js" defer></script>
+  <script src="js/upload.js" defer></script>
+  <script src="js/dashboard.js" defer></script>
+</head>
+<body class="dashboard-page">
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="sidebar__brand">
+        <span class="sidebar__logo">PE</span>
+        <div>
+          <h1>Photo Editor</h1>
+          <p>Creative workspace</p>
+        </div>
+      </div>
+
+      <nav class="sidebar__nav">
+        <button class="sidebar__link is-active" type="button">Home</button>
+        <button class="sidebar__link" type="button" data-scroll-target="projectsSection">All Projects</button>
+        <button class="sidebar__link" type="button" data-scroll-target="learningWidget">Learning Widget</button>
+      </nav>
+
+      <div class="sidebar__footer">
+        <button id="logoutButton" class="button button--ghost" type="button">Log Out</button>
+      </div>
+    </aside>
+
+    <main class="dashboard-main">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Dashboard</p>
+          <h2>Welcome, <span id="displayUsername">User</span></h2>
+        </div>
+
+        <div class="topbar__actions">
+          <div class="storage-card">
+            <p class="storage-card__title">Project Capacity</p>
+            <div class="storage-bar">
+              <div id="storageBarFill" class="storage-bar__fill"></div>
+            </div>
+            <p id="storageText" class="storage-card__meta">0 of 20 project slots used</p>
+          </div>
+
+          <button id="openUploadButton" class="button button--primary" type="button">+ Upload Image</button>
+        </div>
+      </header>
+
+      <section class="continue-strip">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">At a glance</p>
+            <h3>Continue Editing</h3>
+          </div>
+          <button id="refreshDashboardButton" class="button button--ghost" type="button">Refresh</button>
+        </div>
+        <div id="continueEditingRow" class="continue-row">
+          <p class="empty-state">Your recently updated projects will appear here.</p>
+        </div>
+      </section>
+
+      <section class="dashboard-grid">
+        <div class="dashboard-grid__main">
+          <section class="panel upload-panel" id="uploadPanel" hidden>
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Quick action</p>
+                <h3>Upload New Project</h3>
+              </div>
+              <button id="closeUploadButton" class="button button--ghost" type="button">Close</button>
+            </div>
+
+            <div class="upload-form">
+              <div class="form-group">
+                <label for="imgTitle">Project Title</label>
+                <input id="imgTitle" type="text" placeholder="Enter a project title" />
+              </div>
+
+              <div class="form-group">
+                <label for="imgFile">Image File</label>
+                <input id="imgFile" type="file" accept=".jpg,.jpeg,.png,.webp" />
+              </div>
+
+              <div class="upload-actions">
+                <button id="uploadButton" class="button button--primary" type="button">Upload</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" id="projectsSection">
+            <div class="section-heading section-heading--stack-mobile">
+              <div>
+                <p class="eyebrow">Project management</p>
+                <h3>All Projects</h3>
+              </div>
+
+              <div class="project-toolbar">
+                <input id="projectSearchInput" class="search-input" type="search" placeholder="Search by title..." />
+                <button id="selectAllButton" class="button button--ghost" type="button">Select All</button>
+                <button id="clearSelectionButton" class="button button--ghost" type="button">Clear</button>
+                <button id="bulkDeleteButton" class="button button--danger" type="button" disabled>Delete Selected</button>
+              </div>
+            </div>
+
+            <div id="projectsGrid" class="projects-grid">
+              <p class="empty-state">No projects yet. Upload an image to get started.</p>
+            </div>
+          </section>
+        </div>
+
+        <aside class="dashboard-grid__side">
+          <section class="panel widget">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Quick insight</p>
+                <h3>Recent Exports</h3>
+              </div>
+            </div>
+            <ul id="recentExportsList" class="simple-list">
+              <li>No exports yet. Use the editor to export PNG files.</li>
+            </ul>
+          </section>
+
+          <section class="panel widget" id="learningWidget">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Learning widget</p>
+                <h3>Tips & Shortcuts</h3>
+              </div>
+            </div>
+            <ul class="tips-list">
+              <li><strong>Tip:</strong> Save versions before making major edits so you can restore them later.</li>
+              <li><strong>Try this:</strong> Use blur with a brightness increase to create softer portrait previews.</li>
+              <li><strong>Workflow:</strong> Upload batches one at a time and use titles that are easy to search later.</li>
+              <li><strong>Feature spotlight:</strong> Version history lets you compare old edits without overwriting the original.</li>
+            </ul>
+          </section>
+
+          <section class="panel widget">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Account</p>
+                <h3>User Summary</h3>
+              </div>
+            </div>
+            <div class="account-summary">
+              <p><strong>Email:</strong> <span id="displayEmail">-</span></p>
+              <p><strong>Projects:</strong> <span id="displayProjectCount">0</span></p>
+            </div>
+          </section>
+        </aside>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
