@@ -16,12 +16,23 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("logoutButton")?.addEventListener("click", logoutUser);
   }
   
-  // [04/21/2026] load current user info into the form
+  // [04/21/2026] load current user info into the form and header
   async function loadAccountProfile() {
     try {
       const user = await makeRequest("/auth/me");
+  
       document.getElementById("accountUsername").value = user.username || "";
       document.getElementById("accountEmail").value = user.email || "";
+  
+      const headerName = document.getElementById("accountHeaderName");
+      if (headerName) {
+        headerName.textContent = user.username || "Account";
+      }
+  
+      const avatar = document.getElementById("accountAvatar");
+      if (avatar && user.username) {
+        avatar.textContent = user.username.charAt(0).toUpperCase();
+      }
     } catch (error) {
       console.error("Load profile error:", error);
       alert("Could not load profile.");
@@ -43,6 +54,16 @@ document.addEventListener("DOMContentLoaded", () => {
         username,
         email
       });
+  
+      const headerName = document.getElementById("accountHeaderName");
+      if (headerName) {
+        headerName.textContent = username;
+      }
+  
+      const avatar = document.getElementById("accountAvatar");
+      if (avatar && username) {
+        avatar.textContent = username.charAt(0).toUpperCase();
+      }
   
       alert(result.message || "Profile updated.");
     } catch (error) {

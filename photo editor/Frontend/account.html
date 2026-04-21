@@ -4,86 +4,116 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Account - Photo Editor</title>
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/account.css" />
   <script src="js/api.js" defer></script>
   <script src="js/account.js" defer></script>
 </head>
 <body class="dashboard-page">
-  <main class="dashboard-main" style="max-width: 900px; margin: 0 auto;">
-    <header class="topbar">
-      <div class="topbar__intro">
-        <p class="eyebrow">Account</p>
-        <h2>Profile Settings</h2>
-        <p class="topbar__subtext">Update your profile details, password, or sign out.</p>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="sidebar__left">
+        <div class="sidebar__brand">
+          <div class="sidebar__logo">PE</div>
+          <div class="sidebar__brand-text">
+            <h1>Photo Editor</h1>
+            <p>Creative workspace</p>
+          </div>
+        </div>
+
+        <nav class="sidebar__nav">
+          <a href="dashboard.html" class="sidebar__link">Dashboard</a>
+          <a href="account.html" class="sidebar__link is-active">Account</a>
+        </nav>
       </div>
 
-      <div class="topbar__actions">
-        <a href="dashboard.html" class="button button--ghost" style="text-decoration: none;">Back to Dashboard</a>
+      <div class="sidebar__right">
+        <a href="account.html" class="account-chip">
+          <div class="account-chip__avatar" id="accountAvatar">A</div>
+          <div class="account-chip__text">
+            <span id="accountHeaderName">Account</span>
+            <small>Manage profile</small>
+          </div>
+        </a>
       </div>
-    </header>
+    </aside>
 
-    <section class="panel" style="margin-bottom: 1.5rem;">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Profile</p>
-          <h3>Update Email and Username</h3>
-        </div>
-      </div>
-
-      <div class="upload-form">
-        <div class="form-group">
-          <label for="accountUsername">Username</label>
-          <input id="accountUsername" type="text" />
+    <main class="dashboard-main">
+      <header class="topbar">
+        <div class="topbar__intro">
+          <p class="eyebrow">Account</p>
+          <h2>Profile Settings</h2>
+          <p class="topbar__subtext">Update your account details and password.</p>
         </div>
 
-        <div class="form-group">
-          <label for="accountEmail">Email</label>
-          <input id="accountEmail" type="email" />
+        <div class="topbar__actions">
+          <a href="dashboard.html" class="button button--ghost" style="text-decoration: none;">Back to Dashboard</a>
+        </div>
+      </header>
+
+      <section class="panel" style="margin-bottom: 1.5rem;">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Profile</p>
+            <h3>Update Username and Email</h3>
+          </div>
         </div>
 
-        <div class="upload-actions">
-          <button id="saveProfileButton" class="button button--primary" type="button">Save Profile</button>
-        </div>
-      </div>
-    </section>
+        <div class="upload-form">
+          <div class="form-group">
+            <label for="accountUsername">Username</label>
+            <input id="accountUsername" type="text" />
+          </div>
 
-    <section class="panel" style="margin-bottom: 1.5rem;">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Security</p>
-          <h3>Change Password</h3>
-        </div>
-      </div>
+          <div class="form-group">
+            <label for="accountEmail">Email</label>
+            <input id="accountEmail" type="email" />
+          </div>
 
-      <div class="upload-form">
-        <div class="form-group">
-          <label for="currentPassword">Current Password</label>
-          <input id="currentPassword" type="password" />
+          <div class="upload-actions">
+            <button id="saveProfileButton" class="button button--primary" type="button">Save Profile</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" style="margin-bottom: 1.5rem;">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Security</p>
+            <h3>Change Password</h3>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label for="newPassword">New Password</label>
-          <input id="newPassword" type="password" />
+        <div class="upload-form">
+          <div class="form-group">
+            <label for="currentPassword">Current Password</label>
+            <input id="currentPassword" type="password" />
+          </div>
+
+          <div class="form-group">
+            <label for="newPassword">New Password</label>
+            <input id="newPassword" type="password" />
+          </div>
+
+          <div class="upload-actions">
+            <button id="changePasswordButton" class="button button--primary" type="button">Change Password</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Session</p>
+            <h3>Account Actions</h3>
+          </div>
         </div>
 
-        <div class="upload-actions">
-          <button id="changePasswordButton" class="button button--primary" type="button">Change Password</button>
+        <div class="card-actions">
+          <button id="logoutButton" class="button button--ghost" type="button">Log Out</button>
         </div>
-      </div>
-    </section>
-
-    <section class="panel">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Session</p>
-          <h3>Account Actions</h3>
-        </div>
-      </div>
-
-      <div class="card-actions">
-        <button id="logoutButton" class="button button--ghost" type="button">Log Out</button>
-      </div>
-    </section>
-  </main>
+      </section>
+    </main>
+  </div>
 </body>
 </html>

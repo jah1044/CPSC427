@@ -1,0 +1,6 @@
+/* [04/21/2026] account page uses the shared app shell plus small page-specific tweaks */
+@import url("./dashboard.css");
+
+.account-page .panel {
+  margin-bottom: 1.5rem;
+}
