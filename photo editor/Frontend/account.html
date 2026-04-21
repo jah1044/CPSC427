@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account - Photo Editor</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="js/api.js" defer></script>
+  <script src="js/account.js" defer></script>
+</head>
+<body class="dashboard-page">
+  <main class="dashboard-main" style="max-width: 900px; margin: 0 auto;">
+    <header class="topbar">
+      <div class="topbar__intro">
+        <p class="eyebrow">Account</p>
+        <h2>Profile Settings</h2>
+        <p class="topbar__subtext">Update your profile details, password, or sign out.</p>
+      </div>
+
+      <div class="topbar__actions">
+        <a href="dashboard.html" class="button button--ghost" style="text-decoration: none;">Back to Dashboard</a>
+      </div>
+    </header>
+
+    <section class="panel" style="margin-bottom: 1.5rem;">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Profile</p>
+          <h3>Update Email and Username</h3>
+        </div>
+      </div>
+
+      <div class="upload-form">
+        <div class="form-group">
+          <label for="accountUsername">Username</label>
+          <input id="accountUsername" type="text" />
+        </div>
+
+        <div class="form-group">
+          <label for="accountEmail">Email</label>
+          <input id="accountEmail" type="email" />
+        </div>
+
+        <div class="upload-actions">
+          <button id="saveProfileButton" class="button button--primary" type="button">Save Profile</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" style="margin-bottom: 1.5rem;">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Security</p>
+          <h3>Change Password</h3>
+        </div>
+      </div>
+
+      <div class="upload-form">
+        <div class="form-group">
+          <label for="currentPassword">Current Password</label>
+          <input id="currentPassword" type="password" />
+        </div>
+
+        <div class="form-group">
+          <label for="newPassword">New Password</label>
+          <input id="newPassword" type="password" />
+        </div>
+
+        <div class="upload-actions">
+          <button id="changePasswordButton" class="button button--primary" type="button">Change Password</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Session</p>
+          <h3>Account Actions</h3>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button id="logoutButton" class="button button--ghost" type="button">Log Out</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

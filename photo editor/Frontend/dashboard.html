@@ -12,42 +12,53 @@
 <body class="dashboard-page">
   <div class="dashboard-layout">
     <aside class="sidebar">
-      <div class="sidebar__brand">
-        <span class="sidebar__logo">PE</span>
-        <div>
-          <h1>Photo Editor</h1>
-          <p>Creative workspace</p>
+      <div class="sidebar__left">
+        <div class="sidebar__brand">
+          <div class="sidebar__logo">PE</div>
+          <div class="sidebar__brand-text">
+            <h1>Photo Editor</h1>
+            <p>Creative workspace</p>
+          </div>
         </div>
+
+        <nav class="sidebar__nav">
+          <button class="sidebar__link is-active" data-scroll-target="projectsSection">Home</button>
+          <button class="sidebar__link" data-scroll-target="projectsSection">All Projects</button>
+          <button class="sidebar__link" data-scroll-target="learningWidget">Learning</button>
+        </nav>
       </div>
 
-      <nav class="sidebar__nav">
-        <button class="sidebar__link is-active" type="button">Home</button>
-        <button class="sidebar__link" type="button" data-scroll-target="projectsSection">All Projects</button>
-        <button class="sidebar__link" type="button" data-scroll-target="learningWidget">Learning Widget</button>
-      </nav>
-
-      <div class="sidebar__footer">
-        <button id="logoutButton" class="button button--ghost" type="button">Log Out</button>
+      <div class="sidebar__right">
+        <a href="account.html" class="account-chip">
+          <div class="account-chip__avatar">A</div>
+          <div class="account-chip__text">
+            <span id="displayUsernameTop">Account</span>
+            <small>Manage profile</small>
+          </div>
+        </a>
       </div>
     </aside>
 
     <main class="dashboard-main">
       <header class="topbar">
-        <div>
+        <div class="topbar__intro">
           <p class="eyebrow">Dashboard</p>
           <h2>Welcome, <span id="displayUsername">User</span></h2>
+          <p class="topbar__subtext">Manage your uploaded images, edits, and saved versions.</p>
         </div>
 
         <div class="topbar__actions">
           <div class="storage-card">
-            <p class="storage-card__title">Project Capacity</p>
+            <p class="storage-card__title">Storage</p>
             <div class="storage-bar">
               <div id="storageBarFill" class="storage-bar__fill"></div>
             </div>
             <p id="storageText" class="storage-card__meta">0 of 20 project slots used</p>
           </div>
 
-          <button id="openUploadButton" class="button button--primary" type="button">+ Upload Image</button>
+          <button id="openUploadButton" class="button button--primary" type="button">
+            + Upload Image
+          </button>
         </div>
       </header>
 
