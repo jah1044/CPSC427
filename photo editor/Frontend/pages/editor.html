@@ -12,11 +12,10 @@
 </head>
 
 <body>
-
 <div class="header-bar">
     <button onclick="location.href='dashboard.html'"><- Back</button>
-    <h3>Image Editor</h3>
-    <button onclick="saveCurrentVersion()">Save New Version</button>
+    <h3 id="editorTitle">Image Editor</h3>
+    <button id="saveVersionButton" onclick="saveCurrentVersion()">Save New Version</button>
 </div>
 
 <div class="tools">
@@ -41,10 +40,9 @@
     <canvas id="editorCanvas"></canvas>
 </main>
 
-<aside>
+<aside id="versionsPanel">
     <h4>Versions</h4>
     <div id="versionList"></div>
 </aside>
-
 </body>
 </html>
