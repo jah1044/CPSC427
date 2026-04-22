@@ -85,7 +85,7 @@ async function loadGallery() {
   updateBulkToolbarState();
 }
 
-// [04/01/2026] render project cards with checkboxes for bulk delete
+// [04/01/2026] render project cards with checkboxes and edit action
 function renderProjectsGrid() {
   const grid = document.getElementById("projectsGrid");
   grid.innerHTML = "";
@@ -107,6 +107,17 @@ function renderProjectsGrid() {
 
       <div class="project-card__body">
         <h4>${escapeHtml(img.title || "Untitled")}</h4>
+
+        <div class="card-actions">
+          <button
+            class="button button--primary"
+            type="button"
+            data-edit-id="${img.id}"
+            data-file-path="${escapeHtml(img.originalFilePath || "")}"
+          >
+            Edit
+          </button>
+        </div>
       </div>
     `;
 
@@ -114,6 +125,7 @@ function renderProjectsGrid() {
   });
 
   wireProjectSelection();
+  wireEditButtons();
 }
 
 // [04/01/2026] attach checkbox listeners after cards are rendered
@@ -129,6 +141,25 @@ function wireProjectSelection() {
       }
 
       updateBulkToolbarState();
+    });
+  });
+}
+
+
+
+// [04/01/2026] open editor page for the selected image
+function wireEditButtons() {
+  document.querySelectorAll("[data-edit-id]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const imageId = button.dataset.editId;
+      const filePath = button.dataset.filePath;
+
+      if (!imageId || !filePath) {
+        alert("Could not open editor for this image.");
+        return;
+      }
+
+      window.location.href = `editor.html?id=${imageId}&file=${encodeURIComponent(filePath)}`;
     });
   });
 }
