@@ -27,8 +27,6 @@ async function handleUpload() {
         const response = await makeRequest('/images/upload', 'POST', formData, true);
 
         if (response) {
-            alert("Upload Successful! Image metadata saved to MySQL.");
-            
             // Clear the inputs
             titleInput.value = '';
             fileInput.value = '';

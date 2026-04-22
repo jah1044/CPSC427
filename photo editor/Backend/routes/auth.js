@@ -8,6 +8,13 @@ const auth = require("../middleware/auth");
 const db = require("../config/db");
 const rateLimit = require("express-rate-limit");
 
+// [04/21/2026] limit repeated login attempts ONLY
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { message: "Too many login attempts, please try again later" }
+});
+
 // [03/25/2026] register user
 router.post("/register", async (req, res) => {
   const { username, email, password } = req.body || {};
@@ -45,7 +52,7 @@ router.post("/register", async (req, res) => {
 });
 
 // [03/25/2026] login user
-router.post("/login", async (req, res) => {
+router.post("/login", loginLimiter, async (req, res) => {
   const { email, password } = req.body || {};
 
   // validate input
@@ -270,13 +277,6 @@ router.delete("/delete-account", auth, async (req, res) => {
     console.error("Delete account error:", err);
     res.status(500).json({ message: "Server error" });
   }
-});
-
-// [04/21/2026] limit repeated login attempts ONLY
-const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10,
-  message: { message: "Too many login attempts, please try again later" }
 });
 
 module.exports = router;
