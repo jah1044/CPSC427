@@ -1,6 +1,7 @@
 const BASE_URL = "http://localhost:5000";
 
-// [04/01/2026] reusable api request helper
+// reusable api request helper
+
 async function makeRequest(endpoint, method = "GET", body = null) {
   const token = localStorage.getItem("token");
 
@@ -15,23 +16,24 @@ async function makeRequest(endpoint, method = "GET", body = null) {
   } else if (body instanceof FormData) {
     options.body = body;
   }
-
+  
   if (token) {
     options.headers["Authorization"] = `Bearer ${token}`;
   }
 
   const response = await fetch(`${BASE_URL}${endpoint}`, options);
-
   let data = {};
   try {
     data = await response.json();
   } catch (err) {
     data = {};
   }
-
+  if (response.status === 401) {
+  console.error("401 Unauthorized - NOT redirecting for debug");
+  return;
+}
   if (!response.ok) {
     throw new Error(data.message || "Request failed");
   }
-
   return data;
 }
