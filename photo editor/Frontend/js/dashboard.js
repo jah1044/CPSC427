@@ -1,3 +1,10 @@
+// ==========================================================
+// Photo Editor Capstone Project
+// File: dashboard.js
+// Description: Loads the dashboard, renders image cards, handles uploads, search, selection, and bulk delete.
+// Date: 04/2026
+// ==========================================================
+
 // [04/01/2026] dashboard state keeps the UI and selected projects in sync
 let dashboardImages = [];
 let filteredImages = [];

@@ -1,3 +1,10 @@
+// ==========================================================
+// Photo Editor Capstone Project
+// File: server.js
+// Description: Main Express server file that loads middleware, routes, and starts the backend.
+// Date: 04/2026
+// ==========================================================
+
 // [03/25/2026] load env + packages
 require("dotenv").config();
 const express = require("express");

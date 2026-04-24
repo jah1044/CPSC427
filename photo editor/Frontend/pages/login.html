@@ -1,5 +1,12 @@
 <!DOCTYPE html>
+<!-- ==========================================================
+ Photo Editor Capstone Project
+ File: login.html
+ Description: Login page for returning users.
+ Date: 04/2026
+========================================================== -->
 <html lang="en">
+<!-- Page metadata, stylesheet links, and JavaScript imports -->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,15 +16,18 @@
   <script src="../js/api.js" defer></script>
   <script src="../js/auth.js" defer></script>
 </head>
+<!-- Main visible page content starts here -->
 <body class="auth-page">
-  <main class="auth-shell">
+  <!-- Main page content area -->
+<main class="auth-shell">
     <section class="auth-card">
       <div class="auth-card__header">
         <h1>Welcome Back</h1>
         <p>Log in to manage projects, upload images, and continue editing.</p>
       </div>
 
-      <form id="loginForm" class="auth-form">
+      <!-- Form used to collect user input -->
+<form id="loginForm" class="auth-form">
         <label for="loginEmail">Email</label>
         <input id="loginEmail" name="email" type="email" placeholder="you@example.com" required />
 

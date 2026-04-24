@@ -1,3 +1,10 @@
+// ==========================================================
+// Photo Editor Capstone Project
+// File: editor.js
+// Description: Loads images into the canvas, supports preview mode, saves versions, and restores versions.
+// Date: 04/2026
+// ==========================================================
+
 let currentImg = null;
 
 // load image from URL parameter when page loads

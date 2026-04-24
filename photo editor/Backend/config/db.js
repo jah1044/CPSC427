@@ -1,3 +1,10 @@
+// ==========================================================
+// Photo Editor Capstone Project
+// File: db.js
+// Description: Creates and exports the MySQL database connection used by backend routes.
+// Date: 04/2026
+// ==========================================================
+
 // [03/25/2026] load env + mysql
 require("dotenv").config();
 const mysql = require("mysql2");

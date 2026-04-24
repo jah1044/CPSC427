@@ -1,3 +1,10 @@
+// ==========================================================
+// Photo Editor Capstone Project
+// File: api.js
+// Description: Reusable frontend helper for backend requests and JWT Authorization headers.
+// Date: 04/2026
+// ==========================================================
+
 const BASE_URL = "http://localhost:5000";
 
 // reusable api request helper

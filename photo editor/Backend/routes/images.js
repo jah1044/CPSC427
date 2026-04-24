@@ -1,3 +1,10 @@
+// ==========================================================
+// Photo Editor Capstone Project
+// File: images.js
+// Description: Handles image upload, viewing, version history, restoration, saving edited versions, and deletion.
+// Date: 04/2026
+// ==========================================================
+
 // [03/25/2026] load packages
 const express = require("express");
 const router = express.Router();

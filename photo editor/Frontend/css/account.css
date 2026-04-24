@@ -1,3 +1,10 @@
+/* ==========================================================
+   Photo Editor Capstone Project
+   File: account.css
+   Description: Styles the account/settings page.
+   Date: 04/2026
+   ========================================================== */
+
 /* [04/21/2026] account page uses the shared app shell plus small page-specific tweaks */
 @import url("./dashboard.css");
 

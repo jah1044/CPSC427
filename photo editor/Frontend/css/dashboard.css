@@ -1,3 +1,10 @@
+/* ==========================================================
+   Photo Editor Capstone Project
+   File: dashboard.css
+   Description: Styles the dashboard, header, project grid, upload area, and widgets.
+   Date: 04/2026
+   ========================================================== */
+
 /* [04/21/2026] dashboard and shared app shell styles */
 .dashboard-page {
   min-height: 100vh;

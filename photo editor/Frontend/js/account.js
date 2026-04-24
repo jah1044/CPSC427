@@ -1,3 +1,10 @@
+// ==========================================================
+// Photo Editor Capstone Project
+// File: account.js
+// Description: Runs account page actions such as profile updates, password changes, logout, and account deletion.
+// Date: 04/2026
+// ==========================================================
+
 // [04/21/2026] protect account page when user is not logged in
 
 document.addEventListener("DOMContentLoaded", () => {

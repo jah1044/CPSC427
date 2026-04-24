@@ -1,3 +1,10 @@
+// ==========================================================
+// Photo Editor Capstone Project
+// File: auth.js
+// Description: Handles login and registration forms and saves the JWT after login.
+// Date: 04/2026
+// ==========================================================
+
 // [04/01/2026] wait until page loads
 
 document.addEventListener("DOMContentLoaded", () => {

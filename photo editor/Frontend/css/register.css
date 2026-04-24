@@ -1,2 +1,9 @@
+/* ==========================================================
+   Photo Editor Capstone Project
+   File: register.css
+   Description: Styles the registration page.
+   Date: 04/2026
+   ========================================================== */
+
 /* [04/21/2026] register page uses the same auth card layout */
 @import url("./login.css");

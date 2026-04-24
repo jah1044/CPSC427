@@ -1,3 +1,10 @@
+// ==========================================================
+// Photo Editor Capstone Project
+// File: auth.js
+// Description: Handles account registration, login, profile updates, password changes, password reset, and account deletion.
+// Date: 04/2026
+// ==========================================================
+
 // [03/25/2026] load packages
 const express = require("express");
 const router = express.Router();

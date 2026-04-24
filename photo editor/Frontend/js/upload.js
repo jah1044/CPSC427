@@ -1,3 +1,10 @@
+// ==========================================================
+// Photo Editor Capstone Project
+// File: upload.js
+// Description: Uploads and deletes images through the backend API.
+// Date: 04/2026
+// ==========================================================
+
 
 async function handleUpload() {
     // get the elements from dashboard

@@ -1,5 +1,12 @@
 <!DOCTYPE html>
+<!-- ==========================================================
+ Photo Editor Capstone Project
+ File: register.html
+ Description: Registration page for new users.
+ Date: 04/2026
+========================================================== -->
 <html lang="en">
+<!-- Page metadata, stylesheet links, and JavaScript imports -->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,15 +16,18 @@
   <script src="../js/api.js" defer></script>
   <script src="../js/auth.js" defer></script>
 </head>
+<!-- Main visible page content starts here -->
 <body class="auth-page">
-  <main class="auth-shell">
+  <!-- Main page content area -->
+<main class="auth-shell">
     <section class="auth-card">
       <div class="auth-card__header">
         <h1>Create Account</h1>
         <p>Register to upload, organize, and version your edited images.</p>
       </div>
 
-      <form id="registerForm" class="auth-form">
+      <!-- Form used to collect user input -->
+<form id="registerForm" class="auth-form">
         <label for="registerUsername">Username</label>
         <input id="registerUsername" name="username" type="text" placeholder="Choose a username" required />
 

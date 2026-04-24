@@ -1,3 +1,10 @@
+// ==========================================================
+// Photo Editor Capstone Project
+// File: auth.js
+// Description: Checks JWT tokens before protected backend routes are allowed to run.
+// Date: 04/2026
+// ==========================================================
+
 // [03/26/2026] load jwt
 const jwt = require("jsonwebtoken");
 

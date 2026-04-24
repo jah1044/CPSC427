@@ -1,5 +1,12 @@
 <!DOCTYPE html>
+<!-- ==========================================================
+ Photo Editor Capstone Project
+ File: editor.html
+ Description: Canvas image editor page with tools, filters, export, and version history.
+ Date: 04/2026
+========================================================== -->
 <html>
+<!-- Page metadata, stylesheet links, and JavaScript imports -->
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,13 +18,15 @@
     <script src="../js/editor.js" defer></script>
 </head>
 
+<!-- Main visible page content starts here -->
 <body>
 <div class="header-bar">
-    <button onclick="location.href='dashboard.html'"><- Back</button>
+    <button onclick="location.href='dashboard.html'"><Back</button>
     <h3 id="editorTitle">Image Editor</h3>
     <button id="saveVersionButton" onclick="saveCurrentVersion()">Save New Version</button>
 </div>
 
+<!-- Editor tool panel with adjustments, filters, and export controls -->
 <div class="tools">
     <h3>Adjustments</h3>
 
@@ -36,10 +45,13 @@
     <button onclick="downloadImage('png')">PNG</button>
 </div>
 
+<!-- Main page content area -->
 <main>
-    <canvas id="editorCanvas"></canvas>
+    <!-- Canvas where the image is drawn and edited -->
+<canvas id="editorCanvas"></canvas>
 </main>
 
+<!-- Version history panel for saved image versions -->
 <aside id="versionsPanel">
     <h4>Versions</h4>
     <div id="versionList"></div>

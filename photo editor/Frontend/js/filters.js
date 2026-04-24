@@ -1,3 +1,10 @@
+// ==========================================================
+// Photo Editor Capstone Project
+// File: filters.js
+// Description: Applies Canvas image filters and pixel-processing effects such as brightness, sepia, blur, and edge detection.
+// Date: 04/2026
+// ==========================================================
+
 // active filter state
 
 let sepiaActive = false;
