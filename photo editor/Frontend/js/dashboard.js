@@ -161,12 +161,19 @@ function wireEditButtons() {
       const imageId = button.dataset.editId;
       const filePath = button.dataset.filePath;
 
+      console.log("DASHBOARD EDIT IMAGE ID:", imageId);
+      console.log("DASHBOARD EDIT FILE PATH:", filePath);
+
       if (!imageId || !filePath) {
-        alert("Could not open editor for this image.");
+        alert("Could not open editor because image ID or file path is missing.");
         return;
       }
 
-      window.location.href = `editor.html?id=${imageId}&file=${encodeURIComponent(filePath)}`;
+      localStorage.setItem("currentImageId", imageId);
+      localStorage.setItem("currentImagePath", filePath);
+
+      window.location.href =
+        `/pages/editor.html?id=${encodeURIComponent(imageId)}&file=${encodeURIComponent(filePath)}`;
     });
   });
 }
