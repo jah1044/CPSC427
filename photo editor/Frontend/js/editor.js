@@ -27,6 +27,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // wire up sliders
     document.getElementById("scale").addEventListener("input", redraw);
     document.getElementById("br").addEventListener("input", redraw);
+    document.getElementById("contrast").addEventListener("input", redraw);
+    document.getElementById("rBalance").addEventListener("input", redraw);
+    document.getElementById("gBalance").addEventListener("input", redraw);
+    document.getElementById("bBalance").addEventListener("input", redraw);
 });
 
 // [04/22/2026] change editor UI for screenshot/demo mode

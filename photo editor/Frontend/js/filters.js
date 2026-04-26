@@ -13,6 +13,10 @@ let blurActive = false;
 
 let edgeActive = false;
 
+let grayscaleActive = false;
+
+let sharpenActive = false;
+
 
 
 // base image which is set by editor.js when image loads
@@ -65,6 +69,18 @@ function applyFiltersToCanvas(ctx, img, canvas) {
 
     imageData = applyBrightness(imageData, brightness);
 
+    // Contrast and RGB Balance
+    const contrast = document.getElementById('contrast').value / 100;
+
+    const rFactor  = document.getElementById('rBalance').value / 100;
+
+    const gFactor  = document.getElementById('gBalance').value / 100;
+
+    const bFactor  = document.getElementById('bBalance').value / 100;
+
+    imageData = applyContrast(imageData, contrast);
+
+    imageData = applyRGBBalance(imageData, rFactor, gFactor, bFactor);
 
 
     // filters (only one active at a time)
@@ -75,7 +91,9 @@ function applyFiltersToCanvas(ctx, img, canvas) {
 
     if (edgeActive) imageData = applyEdgeToData(imageData, canvas.width, canvas.height);
 
+    if (grayscaleActive) imageData = applyGrayscaleToData(imageData);
 
+    if (sharpenActive) imageData = applySharpenToData(imageData, canvas.width, canvas.height);
 
     ctx.putImageData(imageData, 0, 0);
 
@@ -281,4 +299,99 @@ function downloadImage(type) {
 
     link.click();
 
+}
+
+
+
+function applyContrast(imageData, factor) {
+    const data = imageData.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+        data[i]     = Math.min(255, Math.max(0, (data[i]     - 128) * factor + 128)); // R
+        data[i + 1] = Math.min(255, Math.max(0, (data[i + 1] - 128) * factor + 128)); // G
+        data[i + 2] = Math.min(255, Math.max(0, (data[i + 2] - 128) * factor + 128)); // B
+    }
+
+    return imageData;
+}
+
+
+
+
+// Grayscale
+function applyGrayscaleToData(imageData) {
+    const data = imageData.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+        const avg = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+        data[i] = data[i + 1] = data[i + 2] = avg;
+    }
+
+    return imageData;
+}
+
+
+
+// Sharpen
+function applySharpenToData(imageData, width, height) {
+    const src = new Uint8ClampedArray(imageData.data);
+    const dst = imageData.data;
+
+    const kernel = [
+         0, -1,  0,
+        -1,  5, -1,
+         0, -1,  0
+    ];
+
+    for (let y = 1; y < height - 1; y++) {
+        for (let x = 1; x < width - 1; x++) {
+            for (let c = 0; c < 3; c++) {
+                let sum = 0;
+                let k  = 0;
+
+                for (let ky = -1; ky <= 1; ky++) {
+                    for (let kx = -1; kx <= 1; kx++) {
+                        const idx = ((y + ky) * width + (x + kx)) * 4 + c;
+                        sum += src[idx] * kernel[k++];
+                    }
+                }
+
+                const idx = (y * width + x) * 4 + c;
+                dst[idx] = Math.min(255, Math.max(0, sum));
+            }
+        }
+    }
+
+    return imageData;
+}
+
+
+
+// RGB Balance
+function applyRGBBalance(imageData, rFactor, gFactor, bFactor) {
+    const data = imageData.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+        data[i]     = Math.min(255, data[i]     * rFactor); // R
+        data[i + 1] = Math.min(255, data[i + 1] * gFactor); // G
+        data[i + 2] = Math.min(255, data[i + 2] * bFactor); // B
+    }
+
+    return imageData;
+}
+
+
+
+// Toggle Grayscale Filter
+function applyGrayscale() {
+    grayscaleActive = !grayscaleActive;
+    redraw();
+}
+
+
+
+// Toggle Sharpen Filter
+function applySharpen() {
+    sharpenActive = !sharpenActive;
+    redraw();
 }
