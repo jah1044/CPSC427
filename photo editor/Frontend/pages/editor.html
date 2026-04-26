@@ -36,10 +36,25 @@
     <label>Brightness</label>
     <input type="range" id="br" min="0" max="200" value="100">
 
+    <label>Contrast</label>
+    <input type="range" id="contrast" min="0" max="200" value="100">
+
+    <h3>RGB Balance</h3>
+    <label>Red</label>
+    <input type="range" id="rBalance" min="0" max="200" value="100">
+
+    <label>Green</label>
+    <input type="range" id="gBalance" min="0" max="200" value="100">
+
+    <label>Blue</label>
+    <input type="range" id="bBalance" min="0" max="200" value="100">
+
     <h3>Filters</h3>
     <button onclick="applySepia()">Sepia</button>
     <button onclick="applyBlur()">Blur</button>
     <button onclick="applyEdgeDetection()">Edge</button>
+    <button onclick="applyGrayscale()">Grayscale</button>
+    <button onclick="applySharpen()">Sharpen</button>
 
     <h3>Export</h3>
     <button onclick="downloadImage('png')">PNG</button>
