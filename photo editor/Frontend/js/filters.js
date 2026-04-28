@@ -369,6 +369,7 @@ function applySharpenToData(imageData, width, height) {
 
 // RGB Balance
 function applyRGBBalance(imageData, rFactor, gFactor, bFactor) {
+    console.log("Factors -> R:", rFactor, "G:", gFactor, "B:", bFactor);
     const data = imageData.data;
 
     for (let i = 0; i < data.length; i += 4) {
